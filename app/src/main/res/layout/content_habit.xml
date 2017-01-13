@@ -177,6 +177,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/what_you_need_know_managing"
         />
 
 
