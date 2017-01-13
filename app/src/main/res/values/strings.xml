@@ -6,6 +6,7 @@
     <string name="category_kind">Category Product:</string>
     <string name="category_Price">Price:</string>
     <string name="category_Units">Units:</string>
+    <string name="category_Photo">Photo:</string>
     <string name="product_name">Product Name"</string>
     <string name="product_Bar_Code">Bar Code Number"</string>
     <string name="product_Price">Price"</string>
