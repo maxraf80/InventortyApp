@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">Inventorty App</string>
     <string name="editor_activity_title_new_product">Add a Product</string>
-    <string name="category_product">Product</string>
+    <string name="category_product">Product:</string>
+    <string name="category_id">ID:</string>
+    <string name="category_kind">Category Product:</string>
+    <string name="category_Price">Price:</string>
+    <string name="category_Units">Units:</string>
+    <string name="product_name">Product Name"</string>
+    <string name="product_Bar_Code">Bar Code Number"</string>
+    <string name="product_Price">Price"</string>
+    <string name="product_Units">Units"</string>
+
 </resources>
