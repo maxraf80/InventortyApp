@@ -5,7 +5,10 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -20,15 +23,19 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private Spinner mCategorySpinner;
     private EditText mPriceText;
     private EditText mUnitsText;
+    private int mCategory= ItemContract.ItemEntry.CATEGORY_UNKNOWN;
     private boolean mItemHasChanged = false;
 
-
-    private int mCategory= ItemContract.ItemEntry.CATEGORY_UNKNOWN;
-
+    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            mItemHasChanged = true;
+            return false;}};
 
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return null;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.content_habit);
     }
 
     @Override

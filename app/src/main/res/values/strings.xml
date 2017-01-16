@@ -11,5 +11,6 @@
     <string name="product_Bar_Code">Bar Code Number"</string>
     <string name="product_Price">Price"</string>
     <string name="product_Units">Units"</string>
+    <string name="action_delete_all_entries">Delete all entries</string>
 
 </resources>

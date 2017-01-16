@@ -1,6 +1,7 @@
 package udacity.com.inventortyapp;
 
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -9,6 +10,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -16,6 +20,7 @@ import android.widget.ListView;
 import udacity.com.inventortyapp.data.ItemContract;
 
 import static android.R.attr.id;
+import static android.R.attr.theme;
 
 public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
@@ -49,11 +54,39 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 Uri currentItemUri = ContentUris.withAppendedId(ItemContract.ItemEntry.CONTENT_URI, id);
                 intent.setData(currentItemUri);
                 startActivity(intent);}});
-        
 
+
+        getLoaderManager().initLoader(ITEM_LOADER,null,this); }
+
+    private void deleteAllItems(){
+        int rowsDeleted = getContentResolver().delete(ItemContract.ItemEntry.CONTENT_URI,null,null);
+        Log.v("CatalogActivity", rowsDeleted + " rows deleted from item database");}
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_catalog, menu);
+        return true;}
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_delete_all_entries:
+                deleteAllItems();
+                return true;}
+        return super.onOptionsItemSelected(item); }
+
+    @Override
+    public android.content.Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return null;
     }
 
 
+    @Override
+    public void onLoaderReset(android.content.Loader<Cursor> loader) {
+
+    }
+
+}
 
 
 
