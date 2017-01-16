@@ -21,7 +21,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mPriceText;
     private EditText mUnitsText;
     private boolean mItemHasChanged = false;
-    
+
 
     private int mCategory= ItemContract.ItemEntry.CATEGORY_UNKNOWN;
 
