@@ -1,14 +1,21 @@
 package udacity.com.inventortyapp;
 
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+
+import udacity.com.inventortyapp.data.ItemContract;
+
+import static android.R.attr.id;
 
 public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
@@ -32,7 +39,17 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         View emtyView = findViewById(R.id.empty_view);
         itemListView.setEmptyView(emtyView);
 
-        mCursorAdapter
+        mCursorAdapter = new ItemCursorAdapter(this,null);
+        itemListView.setAdapter(mCursorAdapter);
+
+        itemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(CatalogActivity.this,EditorActivity.class);
+                Uri currentItemUri = ContentUris.withAppendedId(ItemContract.ItemEntry.CONTENT_URI, id);
+                intent.setData(currentItemUri);
+                startActivity(intent);}});
+        
 
     }
 
