@@ -15,10 +15,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import udacity.com.inventortyapp.data.ItemContract;
 
-public abstract class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int EXISTING_ITEM_LOADER=0;
     private Uri mCurrentItemUri;
@@ -118,6 +119,14 @@ public abstract class EditorActivity extends AppCompatActivity implements Loader
         if(!TextUtils.isEmpty(unitString)){units=Integer.parseInt(unitString);}
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_PRICE,price);
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_UNITS,units);
+
+        if(mCurrentItemUri == null){Uri newUri = getContentResolver().insert(ItemContract.ItemEntry.CONTENT_URI,values);
+        if (newUri == null){ Toast.makeText(this, getString(R.string.editor_insert_item_failed),Toast.LENGTH_SHORT).show();}
+        else {Toast.makeText(this,getString(R.string.editor_insert_item_successful),Toast.LENGTH_SHORT).show();}}
+
+
+
+
 
     }
 
