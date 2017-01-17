@@ -12,5 +12,12 @@
     <string name="product_Price">Price"</string>
     <string name="product_Units">Units"</string>
     <string name="action_delete_all_entries">Delete all entries</string>
+    <string name="category_unknown">Unknown</string>
+    <string name="category_pets">Pets</string>
+    <string name="category_cleaners">Cleaners</string>
+    <string name="category_food">Food</string>
+    <string name="category_hygiene">Hygiene</string>
+    <string name="category_fruit">Fruit</string>
+    <string name="category_fish">Fish</string>
 
 </resources>
