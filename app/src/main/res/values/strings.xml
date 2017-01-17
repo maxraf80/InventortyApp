@@ -19,5 +19,7 @@
     <string name="category_hygiene">Hygiene</string>
     <string name="category_fruit">Fruit</string>
     <string name="category_fish">Fish</string>
+    <string name="editor_activity_title_new_item">Add a new Item</string>
+    <string name="editor_activity_title_edit_item">Edit item</string>
 
 </resources>

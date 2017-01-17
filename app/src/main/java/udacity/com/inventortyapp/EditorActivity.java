@@ -1,12 +1,12 @@
 package udacity.com.inventortyapp;
 
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -18,7 +18,7 @@ import android.widget.Spinner;
 
 import udacity.com.inventortyapp.data.ItemContract;
 
-public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public abstract class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int EXISTING_ITEM_LOADER=0;
     private Uri mCurrentItemUri;
@@ -44,10 +44,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     Intent intent = getIntent();
     mCurrentItemUri = intent.getData();
 
-        if (mCurrentItemUri ==null){setTitle("Add an Item");
+        if (mCurrentItemUri ==null){setTitle(getString(R.string.editor_activity_title_new_item));
         invalidateOptionsMenu();}else{
-        setTitle("Ediat an Item");}
-        getLoaderManager().initLoader(EXISTING_ITEM_LOADER,null,this);
+        setTitle(getString(R.string.editor_activity_title_edit_item));
+        getLoaderManager().initLoader(EXISTING_ITEM_LOADER,null,this);}
 
         mNameEditText =(EditText) findViewById(R.id.edit_activity_name);
         mReferenceText=(EditText) findViewById(R.id.edit_bar_code);
@@ -68,10 +68,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         android.R.layout.simple_spinner_item);
         kindSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         mCategorySpinner.setAdapter(kindSpinnerAdapter);
-        mCategorySpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
+            public void onItemSelected(AdapterView<?> parent, View view, int i, long l) {
                 String selection = (String) parent.getItemAtPosition(i);
                 if (!TextUtils.isEmpty(selection)) {
                     if (selection.equals(getString(R.string.category_unknown))) {
@@ -89,15 +91,59 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     } else {
                         mCategory = ItemContract.ItemEntry.CATEGORY_FISH;}}}
 
+
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                mCategory = ItemContract.ItemEntry.CATEGORY_UNKNOWN;
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                mCategory= ItemContract.ItemEntry.CATEGORY_UNKNOWN;}});}
+
+    private void saveItem(){
+        String nameString = mNameEditText.getText().toString().trim();
+        String referenceString= mReferenceText.getText().toString().trim();
+        String priceString= mPriceText.getText().toString().trim();
+        String unitString= mUnitsText.getText().toString().trim();
+
+    if (mCurrentItemUri == null&& TextUtils.isEmpty(nameString) && TextUtils.isEmpty(referenceString)&&
+                TextUtils.isEmpty(priceString)&& TextUtils.isEmpty(unitString)
+        && mCategory==mCategory) {return;}
+
+        ContentValues values = new ContentValues();
+        values.put(ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT,nameString);
+        values.put(ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE,referenceString);
+        values.put(ItemContract.ItemEntry.COLUMN_ITEM_PRICE,priceString);
+        values.put(ItemContract.ItemEntry.COLUMN_ITEM_UNITS,unitString);
+
+        int price=0;
+        int units=0;
+        if(!TextUtils.isEmpty(priceString)){price=Integer.parseInt(priceString);}
+        if(!TextUtils.isEmpty(unitString)){units=Integer.parseInt(unitString);}
+        values.put(ItemContract.ItemEntry.COLUMN_ITEM_PRICE,price);
+        values.put(ItemContract.ItemEntry.COLUMN_ITEM_UNITS,units);
+
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mNameEditText.setText("");
+        mReferenceText.setText("");
+        mPriceText.setText("");
+        mUnitsText.setText("");
+        mCategorySpinner.setSelection(0);}
 
 
 
 
-        });}}
+
+}
 
 
 
