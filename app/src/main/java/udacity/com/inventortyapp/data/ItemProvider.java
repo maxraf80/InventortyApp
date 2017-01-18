@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import static android.R.attr.id;
+import static udacity.com.inventortyapp.R.id.price;
 
 public class ItemProvider extends ContentProvider{
 
@@ -39,9 +40,9 @@ public class ItemProvider extends ContentProvider{
     String reference = values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE);
     if (reference==null){ throw new IllegalArgumentException("Item requires a name");
 
-    String price = values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_PRICE);
-    if (price != null && price < 0) {
-    throw new IllegalArgumentException("Pet requires valid weight"); }
+    Integer price = values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_PRICE);
+    if (price == null ) {
+    throw new IllegalArgumentException("Price needs to be defined"); }
 
     SQLiteDatabase database = mDbHelper.getWritableDatabase();
     long id = database.insert(ItemContract.ItemEntry.TABLE_NAME, null, values);
@@ -83,15 +84,31 @@ public class ItemProvider extends ContentProvider{
 
 
 
-    @Override
-    public int delete(Uri uri, String s, String[] strings) {
-        return 0;
-    }
 
     @Override
     public int update(Uri uri, ContentValues contentValues, String s, String[] strings) {
-        return 0;
-    }
+        return 0;   }
+
+
+    @Override
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    SQLiteDatabase database = mDbHelper.getWritableDatabase();
+    int rowsDeleted;
+    final int match = sUriMatcher.match(uri);
+    switch (match) {
+    case ITEMS:
+    rowsDeleted = database.delete(ItemContract.ItemEntry.TABLE_NAME, selection, selectionArgs);
+    break;
+    case ITEM_ID:
+    selection = ItemContract.ItemEntry._ID + "=?";
+    selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+    rowsDeleted = database.delete(ItemContract.ItemEntry.TABLE_NAME, selection, selectionArgs);
+    break;
+    default:
+    throw new IllegalArgumentException("Deletion is not supported for " + uri);}
+    if (rowsDeleted != 0) {
+    getContext().getContentResolver().notifyChange(uri, null);}
+    return rowsDeleted;}
 
     @Override
     public String getType(Uri uri) {
