@@ -9,9 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
-import static android.R.attr.id;
-import static udacity.com.inventortyapp.R.id.price;
-
 public class ItemProvider extends ContentProvider{
 
     public static final String LOG_TAG = ItemProvider.class.getSimpleName();
@@ -61,7 +58,7 @@ public class ItemProvider extends ContentProvider{
     String name = values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT);
     if (name==null){ throw new IllegalArgumentException("Item requires a name");}
     String reference = values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE);
-    if (reference==null){ throw new IllegalArgumentException("Item requires a name");}
+    if (reference==null){ throw new IllegalArgumentException("Item requires a reference");}
     Integer price = Integer.parseInt(values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_PRICE));
     if (price==0 | price < 0) {throw new IllegalArgumentException("Price needs to be defined"); }
     SQLiteDatabase database = mDbHelper.getWritableDatabase();
@@ -70,25 +67,31 @@ public class ItemProvider extends ContentProvider{
     getContext().getContentResolver().notifyChange(uri, null);
     return ContentUris.withAppendedId(uri, id); }
 
-
-
-
-
-
-
-
-
-
     @Override
-    public int update(Uri uri, ContentValues contentValues, String s, String[] strings) {
-        return 0;   }
-
-
+    public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
+    final int match = sUriMatcher.match(uri);
+    switch (match){
+    case ITEMS:
+    return updateItem(uri,contentValues,selection,selectionArgs);
+    case ITEM_ID:
+    selection= ItemContract.ItemEntry._ID + "=?";
+    return updateItem(uri,contentValues,selection,selectionArgs);
+    default:
+    throw new IllegalArgumentException("Update is not supported for "+ uri);}}
 
     private int updateItem(Uri uri,ContentValues values,String selection, String[] selectionArgs){
     if (values.containsKey(ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT)) {
     String name = values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT);
-    if (name==null){throw new IllegalArgumentException("Item requires a name");} }  }
+    if (name==null){throw new IllegalArgumentException("Item requires a name"); }}
+    if (values.containsKey((ItemContract.ItemEntry.COLUMN_ITEM_PRICE))){
+    Integer price = Integer.parseInt(values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_PRICE));
+    if (price==0 | price < 0)
+    {throw new IllegalArgumentException("Price needs to be defined");}}
+    if (values.size() == 0) {  return 0; }
+    SQLiteDatabase database = mDbHelper.getWritableDatabase();
+    int rowsUpdated = database.update(ItemContract.ItemEntry.TABLE_NAME,values,selection,selectionArgs);
+    if(rowsUpdated !=0){getContext().getContentResolver().notifyChange(uri,null);}
+    return rowsUpdated;}
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -120,3 +123,37 @@ public class ItemProvider extends ContentProvider{
                 return ItemContract.ItemEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalStateException("Unknown URI " + uri + " with match " + match);}}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

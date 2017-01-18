@@ -122,13 +122,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         if(mCurrentItemUri == null){Uri newUri = getContentResolver().insert(ItemContract.ItemEntry.CONTENT_URI,values);
         if (newUri == null){ Toast.makeText(this, getString(R.string.editor_insert_item_failed),Toast.LENGTH_SHORT).show();}
-        else {Toast.makeText(this,getString(R.string.editor_insert_item_successful),Toast.LENGTH_SHORT).show();}}
-
-
-
-
-
-    }
+        else {Toast.makeText(this,getString(R.string.editor_insert_item_successful),Toast.LENGTH_SHORT).show();}}}
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {

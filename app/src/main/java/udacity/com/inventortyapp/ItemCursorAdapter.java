@@ -43,8 +43,8 @@ public class ItemCursorAdapter extends CursorAdapter{
 
         if (TextUtils.isEmpty(reference)){reference = "Unknown";}
         if (TextUtils.isEmpty(category)){category = "Unknown";}
-        if (TextUtils.isEmpty(price)){price = "Unknown";}
-        if (TextUtils.isEmpty(units)){units = "Unknown";}
+        if (TextUtils.isEmpty(price)){price = "0";}
+        if (TextUtils.isEmpty(units)){units = "0";}
 
         nameTextView.setText(name);
         referenceTextView.setText(reference);
