@@ -1,14 +1,13 @@
 package udacity.com.inventortyapp;
-
+import android.app.LoaderManager;
 import android.content.ContentUris;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -50,7 +49,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 startActivity(intent);}});
                 getLoaderManager().initLoader(ITEM_LOADER,null,this); }
 
-    private void deleteAllItems(){
+       private void deleteAllItems(){
         int rowsDeleted = getContentResolver().delete(ItemContract.ItemEntry.CONTENT_URI,null,null);
         Log.v("CatalogActivity", rowsDeleted + " rows deleted from item database");}
 

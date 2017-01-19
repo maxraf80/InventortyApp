@@ -32,6 +32,7 @@ public class ItemProvider extends ContentProvider{
         Cursor cursor;
         int match = sUriMatcher.match(uri);
         switch (match) {
+
             case ITEMS:
                 cursor=database.query(ItemContract.ItemEntry.TABLE_NAME,projection, selection, selectionArgs,
                         null, null, sortOrder);

@@ -17,6 +17,8 @@ public static final String CONTENT_ITEM_TYPE =ContentResolver.CURSOR_ITEM_BASE_T
 
 public final static String TABLE_NAME = "items";
 public final static String _ID = BaseColumns._ID;
+
+
 public final static String COLUMN_ITEM_PRODUCT = "name";
 public final static String COLUMN_ITEM_REFERENCE = "reference";
 public final static String COLUMN_ITEM_CATEGORY = "category";
