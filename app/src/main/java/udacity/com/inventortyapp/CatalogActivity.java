@@ -1,7 +1,6 @@
 package udacity.com.inventortyapp;
 
 import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -17,9 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
 import udacity.com.inventortyapp.data.ItemContract;
-import static android.R.attr.id;
-import static android.R.attr.theme;
 
 public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
@@ -38,8 +36,8 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 startActivity(intent); }});
 
         ListView itemListView = (ListView) findViewById(R.id.list);
-        View emtyView = findViewById(R.id.empty_view);
-        itemListView.setEmptyView(emtyView);
+        View emptyView = findViewById(R.id.empty_view);
+        itemListView.setEmptyView(emptyView);
         mCursorAdapter = new ItemCursorAdapter(this,null);
         itemListView.setAdapter(mCursorAdapter);
 
@@ -50,7 +48,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 Uri currentItemUri = ContentUris.withAppendedId(ItemContract.ItemEntry.CONTENT_URI, id);
                 intent.setData(currentItemUri);
                 startActivity(intent);}});
-                getLoaderManager().initLoader(ITEM_LOADER,null, this); }
+                getLoaderManager().initLoader(ITEM_LOADER,null,this); }
 
     private void deleteAllItems(){
         int rowsDeleted = getContentResolver().delete(ItemContract.ItemEntry.CONTENT_URI,null,null);
@@ -89,8 +87,12 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-    mCursorAdapter.swapCursor(data);}
+        mCursorAdapter.swapCursor(data);}
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-    mCursorAdapter.swapCursor(null);}}
+        mCursorAdapter.swapCursor(null);}
+
+
+
+ }
