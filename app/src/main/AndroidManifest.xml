@@ -20,7 +20,6 @@
         </activity>
         <activity
             android:name=".EditorActivity"
-            android:theme="@style/EditorFieldStyle"
             android:parentActivityName=".CatalogActivity">
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"

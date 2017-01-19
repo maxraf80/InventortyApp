@@ -23,5 +23,7 @@
     <string name="editor_activity_title_edit_item">Edit item</string>
     <string name="editor_insert_item_failed">Inserting item failed</string>
     <string name="editor_insert_item_successful">Item saved succesfuly</string>
+    <string name="action_save">Save</string>
+    <string name="action_delete">Delete all entries</string>
 
 </resources>
