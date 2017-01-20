@@ -215,8 +215,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     mNameEditText.setText(product);
     mReferenceText.setText(Integer.toString(reference));
-    mPriceText.setText(price);
-    mUnitsText.setText(units);
+    mPriceText.setText(Integer.toString(price));
+    mUnitsText.setText(Integer.toString(units));
 
     switch (category){
     case ItemContract.ItemEntry.CATEGORY_UNKNOWN:
