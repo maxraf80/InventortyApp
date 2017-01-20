@@ -2,13 +2,17 @@ package udacity.com.inventortyapp;
 
 import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -103,9 +107,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String priceString= mPriceText.getText().toString().trim();
         String unitString= mUnitsText.getText().toString().trim();
 
-    if (mCurrentItemUri == null&& TextUtils.isEmpty(nameString) && TextUtils.isEmpty(referenceString)&&
+        if (mCurrentItemUri == null&& TextUtils.isEmpty(nameString) && TextUtils.isEmpty(referenceString)&&
                 TextUtils.isEmpty(priceString)&& TextUtils.isEmpty(unitString)
-        && mCategory==mCategory) {return;}
+        && mCategory== ItemContract.ItemEntry.CATEGORY_UNKNOWN) {return;}
 
         ContentValues values = new ContentValues();
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT,nameString);
@@ -125,14 +129,60 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         else {Toast.makeText(this,getString(R.string.editor_insert_item_successful),Toast.LENGTH_SHORT).show();}}}
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_editor,menu);
+    return true;}
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+    super.onPrepareOptionsMenu(menu);
+    if(mCurrentItemUri==null){MenuItem menuItem= menu.findItem(R.id.action_delete);
+    menuItem.setVisible(false); }return true;}
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()){
+    case R.id.action_save:
+    saveItem();
+    finish();
+    return true;
+    case R.id.action_delete:
+    showDeleteConfirmationDialog();}
+
+        }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return null;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    if (cursor == null || cursor.getCount() < 1) { return;    }
+    if (cursor.moveToFirst()) {
+    int productColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT);
+    int referenceColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE);
+    int categoryColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_CATEGORY);
+    int priceColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_PRICE);
+    int unitsColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_UNITS);
+
+    String product =cursor.getString(productColumnIndex);
+    String reference = cursor.getString(referenceColumnIndex);
+    String category = cursor.getString(categoryColumnIndex);
+    int price = cursor.getInt(priceColumnIndex);
+    int units = cursor.getInt(unitsColumnIndex);
+
+    mNameEditText.setText(product);
+    mReferenceText.setText(reference);
+    mPriceText.setText(price);
+    mUnitsText.setText(units);
+
+    switch (category){
+        case ItemContract.ItemEntry.CATEGORY_UNKNOWN:
+         mCategorySpinner.setSelection(1);
 
     }
+    }}
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -142,11 +192,23 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mUnitsText.setText("");
         mCategorySpinner.setSelection(0);}
 
+    private void showDeleteConfirmationDialog(){
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setMessage(R.string.delete_dialog_msg);
+    builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+    public void onClick(DialogInterface dialogInterface, int i) {deleteItem();}});
 
+    builder.setNegativeButton(R.string.cancel,new DialogInterface.OnClickListener(){
+    public void onClick(DialogInterface dialogInterface, int i) {
+    if (dialogInterface!=null){dialogInterface.dismiss();}}});
+    AlertDialog alertDialog = builder.create();
+    alertDialog.show(); }
 
-
-
-}
+    private void deleteItem(){
+    if (mCurrentItemUri != null){
+    int rowsDeleted = getContentResolver().delete(mCurrentItemUri,null,null);
+    if (rowsDeleted == 0){Toast.makeText(this,getString(R.string.editor_delete_item_failed),Toast.LENGTH_SHORT).show();}
+    else {Toast.makeText(this,getString(R.string.editor_delete_item_ok),Toast.LENGTH_SHORT).show();}}finish();}}
 
 
 
