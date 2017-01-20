@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -189,19 +188,19 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 ItemContract.ItemEntry.COLUMN_ITEM_UNITS};
 
 
-        return new CursorLoader(
-                mCurrentItemUri,
-                projection,
-                null,
-                null,
-                null);
-
+        return new android.content.CursorLoader(this,   // Parent activity context
+                mCurrentItemUri,         // Query the content URI for the current pet
+                projection,             // Columns to include in the resulting Cursor
+                null,                   // No selection clause
+                null,                   // No selection arguments
+                null);                  // Default sort order
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
     if (cursor == null || cursor.getCount() < 1) { return;    }
     if (cursor.moveToFirst()) {
+
     int productColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT);
     int referenceColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE);
     int categoryColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_CATEGORY);
@@ -209,13 +208,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     int unitsColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_UNITS);
 
     String product =cursor.getString(productColumnIndex);
-    String reference = cursor.getString(referenceColumnIndex);
+    int reference = cursor.getInt(referenceColumnIndex);
     int category = cursor.getInt(categoryColumnIndex);
     int price = cursor.getInt(priceColumnIndex);
     int units = cursor.getInt(unitsColumnIndex);
 
     mNameEditText.setText(product);
-    mReferenceText.setText(reference);
+    mReferenceText.setText(Integer.toString(reference));
     mPriceText.setText(price);
     mUnitsText.setText(units);
 
