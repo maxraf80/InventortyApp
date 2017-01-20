@@ -8,6 +8,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -147,9 +148,33 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     finish();
     return true;
     case R.id.action_delete:
-    showDeleteConfirmationDialog();}
+    showDeleteConfirmationDialog();
+    return true;
+    case android.R.id.home:
+    if(!mItemHasChanged){
+    NavUtils.navigateUpFromSameTask(EditorActivity.this);;
+    return true;}
+    DialogInterface.OnClickListener discardButtonClickListener =
+    new DialogInterface.OnClickListener() {
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+    NavUtils.navigateUpFromSameTask(EditorActivity.this);}};
+    showUnsavedChangesDialog(discardButtonClickListener);
+    return true;}
+    return super.onOptionsItemSelected(item);}
 
-        }
+    @Override
+    public void onBackPressed() {
+    if (!mItemHasChanged) {
+    super.onBackPressed();
+    return; }
+
+    DialogInterface.OnClickListener discardButtonClickListener =
+    new DialogInterface.OnClickListener() {
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+    finish();}};showUnsavedChangesDialog(discardButtonClickListener); }
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -168,7 +193,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     String product =cursor.getString(productColumnIndex);
     String reference = cursor.getString(referenceColumnIndex);
-    String category = cursor.getString(categoryColumnIndex);
+    int category = cursor.getInt(categoryColumnIndex);
     int price = cursor.getInt(priceColumnIndex);
     int units = cursor.getInt(unitsColumnIndex);
 
@@ -178,11 +203,27 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     mUnitsText.setText(units);
 
     switch (category){
-        case ItemContract.ItemEntry.CATEGORY_UNKNOWN:
-         mCategorySpinner.setSelection(1);
-
-    }
-    }}
+    case ItemContract.ItemEntry.CATEGORY_UNKNOWN:
+    mCategorySpinner.setSelection(1);
+    break;
+    case ItemContract.ItemEntry.CATEGORY_CLEANERS:
+    mCategorySpinner.setSelection(2);
+    break;
+    case ItemContract.ItemEntry.CATEGORY_FOOD:
+    mCategorySpinner.setSelection(3);
+    break;
+    case ItemContract.ItemEntry.CATEGORY_PETS:
+    mCategorySpinner.setSelection(4);
+    break;
+    case ItemContract.ItemEntry.CATEGORY_HYGIENE:
+    mCategorySpinner.setSelection(5);
+    break;
+    case ItemContract.ItemEntry.CATEGORY_FRUIT:
+    mCategorySpinner.setSelection(6);
+    break;
+    case ItemContract.ItemEntry.CATEGORY_FISH:
+    mCategorySpinner.setSelection(7);
+    break;}}}
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -191,6 +232,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPriceText.setText("");
         mUnitsText.setText("");
         mCategorySpinner.setSelection(0);}
+
+    private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener){
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setMessage(R.string.unsaved_changes);
+    builder.setPositiveButton(R.string.discard,discardButtonClickListener);
+    builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener(){
+    public void onClick(DialogInterface dialog, int id) {
+    if (dialog != null) {dialog.dismiss();}}});
+    AlertDialog alertDialog = builder.create();
+    alertDialog.show(); }
 
     private void showDeleteConfirmationDialog(){
     AlertDialog.Builder builder = new AlertDialog.Builder(this);

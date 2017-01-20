@@ -30,5 +30,8 @@
     <string name="delete_dialog_msg">Delete this Item?</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="unsaved_changes">Discard your changes and quit editing?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep Editing</string>
 
 </resources>
