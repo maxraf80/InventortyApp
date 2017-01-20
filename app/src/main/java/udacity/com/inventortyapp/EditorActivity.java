@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -115,6 +116,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         ContentValues values = new ContentValues();
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT,nameString);
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE,referenceString);
+        values.put(ItemContract.ItemEntry.COLUMN_ITEM_CATEGORY,mCategory);
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_PRICE,priceString);
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_UNITS,unitString);
 
@@ -178,7 +180,22 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return null;
+        String[] projection = {
+                ItemContract.ItemEntry._ID,
+                ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT,
+                ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE,
+                ItemContract.ItemEntry.COLUMN_ITEM_CATEGORY,
+                ItemContract.ItemEntry.COLUMN_ITEM_PRICE,
+                ItemContract.ItemEntry.COLUMN_ITEM_UNITS};
+
+
+        return new CursorLoader(
+                mCurrentItemUri,
+                projection,
+                null,
+                null,
+                null);
+
     }
 
     @Override

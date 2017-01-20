@@ -25,11 +25,12 @@
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".CatalogActivity"/>
         </activity>
+        <provider
+            android:authorities="com.example.android.items"
+            android:exported="false"
+            android:name=".data.ItemProvider"/>
     </application>
 
-    <provider
-        android:authorities="com.example.android.items"
-        android:exported="false"
-        android:name=".data.ItemProvider"/>
+
 
         </manifest>
