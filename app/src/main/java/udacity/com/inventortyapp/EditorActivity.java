@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -27,12 +29,14 @@ import udacity.com.inventortyapp.data.ItemContract;
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int EXISTING_ITEM_LOADER=0;
+    private static final int PICK_IMAGE_REQUEST = 0;
     private Uri mCurrentItemUri;
     private EditText mNameEditText;
     private EditText mReferenceText;
     private Spinner mCategorySpinner;
     private EditText mPriceText;
     private EditText mUnitsText;
+    private ImageView mImageView;
     private int mCategory= ItemContract.ItemEntry.CATEGORY_UNKNOWN;
     private boolean mItemHasChanged = false;
 
@@ -60,6 +64,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mCategorySpinner = (Spinner)findViewById(R.id.spinner_zone);
         mPriceText=       (EditText)findViewById(R.id.price);
         mUnitsText=       (EditText)findViewById(R.id.units);
+        mImageView = (ImageView) findViewById(R.id.photo);
+        mImageView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+        openImageSelector();}});
 
         mNameEditText.setOnTouchListener(mTouchListener);
         mReferenceText.setOnTouchListener(mTouchListener);
@@ -240,6 +249,17 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     case ItemContract.ItemEntry.CATEGORY_FISH:
     mCategorySpinner.setSelection(7);
     break;}}}
+
+    public void openImageSelector(){
+    Intent intent;
+    if (Build.VERSION.SDK_INT<19){
+    intent = new Intent(Intent.ACTION_GET_CONTENT);}
+    else{ intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+          intent.addCategory(Intent.CATEGORY_OPENABLE);  }
+    intent.setType("image/*");
+    startActivityForResult(Intent.createChooser(intent, "Select Picture"),PICK_IMAGE_REQUEST);}
+
+    
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
