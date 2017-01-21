@@ -1,11 +1,14 @@
 package udacity.com.inventortyapp;
 
+import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +16,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -22,21 +26,29 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 import udacity.com.inventortyapp.data.ItemContract;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final String LOG_TAG = EditorActivity.class.getSimpleName();
     private static final int EXISTING_ITEM_LOADER=0;
     private static final int PICK_IMAGE_REQUEST = 0;
     private Uri mCurrentItemUri;
+    private Uri mUriPhoto;
+    private TextView mTextView;
+    private ImageView mImageView;
     private EditText mNameEditText;
     private EditText mReferenceText;
     private Spinner mCategorySpinner;
     private EditText mPriceText;
     private EditText mUnitsText;
-    private ImageView mImageView;
     private int mCategory= ItemContract.ItemEntry.CATEGORY_UNKNOWN;
     private boolean mItemHasChanged = false;
 
@@ -259,7 +271,66 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     intent.setType("image/*");
     startActivityForResult(Intent.createChooser(intent, "Select Picture"),PICK_IMAGE_REQUEST);}
 
-    
+
+
+
+
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+    if(requestCode== PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK){
+    if (resultData != null){
+    mUriPhoto=resultData.getData();
+    Log.i(LOG_TAG,"Uri: " + mUriPhoto.toString());
+    mTextView.setText(mUriPhoto.toString());
+    mImageView.setImageBitmap(getBitmapFromUri(mUriPhoto));  }}}
+
+    public Bitmap getBitmapFromUri(Uri uri) {
+    if (uri== null || uri.toString().isEmpty())
+        return null;
+    int targetW = mImageView.getWidth();
+    int targetH = mImageView.getHeight();
+
+    InputStream input = null;
+
+    try {
+        input= this.getContentResolver().openInputStream(uri);
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds=true;
+        BitmapFactory.decodeStream(input,null,bmOptions);
+        input.close();
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        input = this.getContentResolver().openInputStream(uri);
+        Bitmap bitmap = BitmapFactory.decodeStream(input, null, bmOptions);
+        input.close();
+        return bitmap;
+
+    } catch (FileNotFoundException fne) {
+        Log.e(LOG_TAG, "Failed to load image.", fne);
+        return null;
+    } catch (Exception e) {
+        Log.e(LOG_TAG, "Failed to load image.", e);
+        return null;
+    } finally {
+        try {
+            input.close();
+        } catch (IOException ioe) {
+
+        }
+    }
+    }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
