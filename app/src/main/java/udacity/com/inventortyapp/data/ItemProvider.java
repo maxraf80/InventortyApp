@@ -57,15 +57,34 @@ public class ItemProvider extends ContentProvider{
     return insertItem(uri,contentValues);
     default:
     throw new IllegalArgumentException("Insertion is not supported for " + uri); }}
+
     private Uri insertItem(Uri uri,ContentValues values){
+
     String name = values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT);
     if (name==null){ throw new IllegalArgumentException("Item requires a name");}
+
+    Integer category = values.getAsInteger(ItemContract.ItemEntry.COLUMN_ITEM_CATEGORY);
+    if (category==null || !ItemContract.ItemEntry.isValidCategory(category)){
+        throw new IllegalArgumentException("Item requires a category");    }
+
     String reference = values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE);
     if (reference==null){ throw new IllegalArgumentException("Item requires a reference");}
+
     Integer price = Integer.parseInt(values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_PRICE));
     if (price==0 | price < 0) {throw new IllegalArgumentException("Price needs to be defined"); }
+
+    Integer units = Integer.parseInt(values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_UNITS));
+    if ( units==0 | units<0) {throw new IllegalArgumentException("Units needs to be defined"); }
+
+    String suplier = values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER);
+    if (suplier==null){throw new IllegalArgumentException("Suplier cannot be an empty field");}
+
+    String email = values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER);
+    if (email==null){throw new IllegalArgumentException("Suplier cannot be an empty field");}
+
     SQLiteDatabase database = mDbHelper.getWritableDatabase();
     long id = database.insert(ItemContract.ItemEntry.TABLE_NAME, null, values);
+
     if (id == -1) { Log.e(LOG_TAG, "Failed to insert row for " + uri); return null; }
     getContext().getContentResolver().notifyChange(uri, null);
     return ContentUris.withAppendedId(uri, id); }
@@ -78,20 +97,25 @@ public class ItemProvider extends ContentProvider{
     return updateItem(uri,contentValues,selection,selectionArgs);
     case ITEM_ID:
     selection= ItemContract.ItemEntry._ID + "=?";
+
     return updateItem(uri,contentValues,selection,selectionArgs);
     default:
     throw new IllegalArgumentException("Update is not supported for "+ uri);}}
 
     private int updateItem(Uri uri,ContentValues values,String selection, String[] selectionArgs){
+
     if (values.containsKey(ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT)) {
     String name = values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT);
     if (name==null){throw new IllegalArgumentException("Item requires a name"); }}
+
     if (values.containsKey((ItemContract.ItemEntry.COLUMN_ITEM_PRICE))){
     Integer price = Integer.parseInt(values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_PRICE));
-    if (price==0 | price < 0)
-    {throw new IllegalArgumentException("Price needs to be defined");}}
+    if (price==0 | price < 0) {throw new IllegalArgumentException("Price needs to be defined");}}
+
+
     if (values.size() == 0) {  return 0; }
     SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
     int rowsUpdated = database.update(ItemContract.ItemEntry.TABLE_NAME,values,selection,selectionArgs);
     if(rowsUpdated !=0){getContext().getContentResolver().notifyChange(uri,null);}
     return rowsUpdated;}

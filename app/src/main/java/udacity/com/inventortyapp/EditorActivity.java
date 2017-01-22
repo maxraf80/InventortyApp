@@ -81,6 +81,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPriceText=       (EditText)findViewById(R.id.price);
         mUnitsText=       (EditText)findViewById(R.id.units);
         mImageView = (ImageView) findViewById(R.id.photo);
+        mTextView = (TextView) findViewById(R.id.image_uri);
         mImageView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -298,7 +299,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     mUriPhoto=resultData.getData();
     Log.i(LOG_TAG,"Uri: " + mUriPhoto.toString());
     mTextView.setText(mUriPhoto.toString());
-    mImageView.setImageBitmap(getBitmapFromUri(mUriPhoto));  }}}
+    mImageView.setImageBitmap(getBitmapFromUri(mUriPhoto));  }}
+    else if (requestCode == SEND_MAIL_REQUEST && resultCode == Activity.RESULT_OK) {  } }
 
     public Bitmap getBitmapFromUri(Uri uri) {
     if (uri== null || uri.toString().isEmpty())
