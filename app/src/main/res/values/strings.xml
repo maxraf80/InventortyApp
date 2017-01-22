@@ -33,5 +33,8 @@
     <string name="unsaved_changes">Discard your changes and quit editing?</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep Editing</string>
-
+    <string name="action_sendmail">Send Order Email</string>
+    <string name="orderSubject">Purchase order for</string>
+    <string name="genericMessageBeggining">Hello this is an automatic email for the purchasing of(see also attached photo):</string>
+    <string name="genericMessageEnd">please, prepare a quote for the following units: </string>
 </resources>

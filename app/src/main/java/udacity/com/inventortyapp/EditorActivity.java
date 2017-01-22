@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -40,6 +41,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private static final String LOG_TAG = EditorActivity.class.getSimpleName();
     private static final int EXISTING_ITEM_LOADER=0;
     private static final int PICK_IMAGE_REQUEST = 0;
+    private static final String STATE_URI = "STATE_URI";
     private Uri mCurrentItemUri;
     private Uri mUriPhoto;
     private TextView mTextView;
@@ -53,10 +55,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private boolean mItemHasChanged = false;
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            mItemHasChanged = true;
-            return false;}};
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+    mItemHasChanged = true;
+    return false;}};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +101,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
 
 
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int i, long l) {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int i, long l) {
                 String selection = (String) parent.getItemAtPosition(i);
                 if (!TextUtils.isEmpty(selection)) {
                     if (selection.equals(getString(R.string.category_unknown))) {
@@ -119,11 +121,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                         mCategory = ItemContract.ItemEntry.CATEGORY_FISH;}}}
 
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
                 mCategory= ItemContract.ItemEntry.CATEGORY_UNKNOWN;}});}
 
-    private void saveItem(){
+        private void saveItem(){
         String nameString = mNameEditText.getText().toString().trim();
         String referenceString= mReferenceText.getText().toString().trim();
         String priceString= mPriceText.getText().toString().trim();
@@ -155,6 +157,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.menu_editor,menu);
     return true;}
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    if(mUriPhoto != null) outState.putString(STATE_URI,mUriPhoto.toString());}
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -209,12 +216,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 ItemContract.ItemEntry.COLUMN_ITEM_UNITS};
 
 
-        return new android.content.CursorLoader(this,   // Parent activity context
-                mCurrentItemUri,         // Query the content URI for the current pet
-                projection,             // Columns to include in the resulting Cursor
-                null,                   // No selection clause
-                null,                   // No selection arguments
-                null);                  // Default sort order
+        return new android.content.CursorLoader(this,
+                mCurrentItemUri,
+                projection,
+                null,
+                null,
+                null);
     }
 
     @Override
@@ -271,13 +278,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     intent.setType("image/*");
     startActivityForResult(Intent.createChooser(intent, "Select Picture"),PICK_IMAGE_REQUEST);}
 
-
-
-
-
-
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent resultData) {
     if(requestCode== PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK){
@@ -304,17 +304,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         int photoW = bmOptions.outWidth;
         int photoH = bmOptions.outHeight;
 
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
 
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
 
         input = this.getContentResolver().openInputStream(uri);
         Bitmap bitmap = BitmapFactory.decodeStream(input, null, bmOptions);
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inBitmap = bitmap;
         input.close();
+
         return bitmap;
 
     } catch (FileNotFoundException fne) {
@@ -326,11 +325,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     } finally {
         try {
             input.close();
-        } catch (IOException ioe) {
-
-        }
-    }
-    }
+        } catch (IOException ioe) {   } }}
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -366,7 +361,44 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     if (mCurrentItemUri != null){
     int rowsDeleted = getContentResolver().delete(mCurrentItemUri,null,null);
     if (rowsDeleted == 0){Toast.makeText(this,getString(R.string.editor_delete_item_failed),Toast.LENGTH_SHORT).show();}
-    else {Toast.makeText(this,getString(R.string.editor_delete_item_ok),Toast.LENGTH_SHORT).show();}}finish();}}
+    else {Toast.makeText(this,getString(R.string.editor_delete_item_ok),Toast.LENGTH_SHORT).show();}}finish();}
+
+
+    private void sendEmail(){
+     if (mUriPhoto!=null){
+     String subject = getString(R.string.orderSubject);
+     String stream = getString(R.string.genericMessageBeggining) + mNameEditText  + getString(R.string.genericMessageEnd) +
+             mUnitsText;
+     Intent shareIntent = ShareCompat.IntentBuilder.from(this)
+             .setStream(mCurrentItemUri)
+             .setSubject(subject)
+             .setText(stream)
+             .getIntent();
+
+     shareIntent.setData(mUriPhoto);
+     shareIntent.setType("message/rfc822");
+     shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+     shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+     }}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
