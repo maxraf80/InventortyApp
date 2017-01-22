@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AlertDialog;
@@ -42,6 +43,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private static final int EXISTING_ITEM_LOADER=0;
     private static final int PICK_IMAGE_REQUEST = 0;
     private static final String STATE_URI = "STATE_URI";
+    private static final int SEND_MAIL_REQUEST = 1;
     private Uri mCurrentItemUri;
     private Uri mUriPhoto;
     private TextView mTextView;
@@ -379,20 +381,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      shareIntent.setType("message/rfc822");
      shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
      shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-     }}}
-
-
-
-
-
-
-
-
-
-
-
-
-
+     startActivityForResult(Intent.createChooser(shareIntent, "Share with"), SEND_MAIL_REQUEST);}
+        else{
+         Snackbar.make(mImageView,"Image not selected", Snackbar.LENGTH_LONG).setAction("Select", new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {openImageSelector();}}).show();}}}
 
 
 
