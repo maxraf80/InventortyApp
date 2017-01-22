@@ -166,6 +166,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     if(mUriPhoto != null) outState.putString(STATE_URI,mUriPhoto.toString());}
 
     @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState.containsKey(STATE_URI) &&
+                !savedInstanceState.getString(STATE_URI).equals("")) {
+            mUriPhoto = Uri.parse(savedInstanceState.getString(STATE_URI));
+            mTextView.setText(mUriPhoto.toString()); }}
+
+    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
     super.onPrepareOptionsMenu(menu);
     if(mCurrentItemUri==null){MenuItem menuItem= menu.findItem(R.id.action_delete);
@@ -192,6 +201,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     NavUtils.navigateUpFromSameTask(EditorActivity.this);}};
     showUnsavedChangesDialog(discardButtonClickListener);
     return true;}
+    int id = item.getItemId();
+    if (id == R.id.action_sendmail) {sendEmail();return true; }
     return super.onOptionsItemSelected(item);}
 
     @Override
