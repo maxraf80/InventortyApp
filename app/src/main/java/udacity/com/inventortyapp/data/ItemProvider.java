@@ -113,13 +113,26 @@ public class ItemProvider extends ContentProvider{
     if (price==0 | price < 0) {throw new IllegalArgumentException("Price needs to be defined");}}
 
 
+    if (values.containsKey((ItemContract.ItemEntry.COLUMN_ITEM_UNITS))){
+    Integer units = Integer.parseInt(values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_UNITS));
+    if (units==0 | units < 0) {throw new IllegalArgumentException("Units needs to be defined");}}
+
+    if (values.containsKey((ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER))){
+    Integer suplier = Integer.parseInt(values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER));
+    if (suplier==0 | suplier < 0) {throw new IllegalArgumentException("Suplier needs to be defined");}}
+
+    if (values.containsKey((ItemContract.ItemEntry.COLUMN_ITEM_EMAIL))){
+    Integer email = Integer.parseInt(values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_EMAIL));
+    if (email==0 | email < 0) {throw new IllegalArgumentException("Suplier needs to be defined");}}
+
+
     if (values.size() == 0) {  return 0; }
     SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
 
     int rowsUpdated = database.update(ItemContract.ItemEntry.TABLE_NAME,values,selection,selectionArgs);
     if(rowsUpdated !=0){getContext().getContentResolver().notifyChange(uri,null);}
     return rowsUpdated;}
-
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
     SQLiteDatabase database = mDbHelper.getWritableDatabase();

@@ -1,5 +1,4 @@
 package udacity.com.inventortyapp;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
