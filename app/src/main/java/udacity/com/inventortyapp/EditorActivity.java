@@ -48,11 +48,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private Uri mUriPhoto;
     private TextView mTextView;
     private ImageView mImageView;
+    private ImageView mImageView2;
     private EditText mNameEditText;
     private EditText mReferenceText;
     private Spinner mCategorySpinner;
     private EditText mPriceText;
     private EditText mUnitsText;
+    private EditText mSuplierText;
+    private EditText mEmailText;
     private int mCategory= ItemContract.ItemEntry.CATEGORY_UNKNOWN;
     private boolean mItemHasChanged = false;
 
@@ -80,7 +83,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mCategorySpinner = (Spinner)findViewById(R.id.spinner_zone);
         mPriceText=       (EditText)findViewById(R.id.price);
         mUnitsText=       (EditText)findViewById(R.id.units);
+        mSuplierText = (EditText) findViewById(R.id.suplier);
+        mEmailText   = (EditText)findViewById(R.id.email);
         mImageView = (ImageView) findViewById(R.id.photo);
+        mImageView2= (ImageView) findViewById(R.id.productImage);
         mTextView = (TextView) findViewById(R.id.image_uri);
         mImageView.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -92,6 +98,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mCategorySpinner.setOnTouchListener(mTouchListener);
         mPriceText.setOnTouchListener(mTouchListener);
         mUnitsText.setOnTouchListener(mTouchListener);
+        mSuplierText.setOnTouchListener(mTouchListener);
+        mEmailText.setOnTouchListener(mTouchListener);
 
         setupSpinner();  }
 
@@ -133,17 +141,23 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String referenceString= mReferenceText.getText().toString().trim();
         String priceString= mPriceText.getText().toString().trim();
         String unitString= mUnitsText.getText().toString().trim();
+        String suplierString= mSuplierText.getText().toString().trim();
+        String emailString= mEmailText.getText().toString().trim();
 
         if (mCurrentItemUri == null&& TextUtils.isEmpty(nameString) && TextUtils.isEmpty(referenceString)&&
-                TextUtils.isEmpty(priceString)&& TextUtils.isEmpty(unitString)
+                TextUtils.isEmpty(priceString)&& TextUtils.isEmpty(unitString) && TextUtils.isEmpty(suplierString)
+                && TextUtils.isEmpty(emailString)
         && mCategory== ItemContract.ItemEntry.CATEGORY_UNKNOWN) {return;}
 
         ContentValues values = new ContentValues();
+
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT,nameString);
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE,referenceString);
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_CATEGORY,mCategory);
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_PRICE,priceString);
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_UNITS,unitString);
+        values.put(ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER,suplierString);
+        values.put(ItemContract.ItemEntry.COLUMN_ITEM_EMAIL,emailString);
 
         int price=0;
         int units=0;
@@ -153,8 +167,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_UNITS,units);
 
         if(mCurrentItemUri == null){Uri newUri = getContentResolver().insert(ItemContract.ItemEntry.CONTENT_URI,values);
-        if (newUri == null){ Toast.makeText(this, getString(R.string.editor_insert_item_failed),Toast.LENGTH_SHORT).show();}
-        else {Toast.makeText(this,getString(R.string.editor_insert_item_successful),Toast.LENGTH_SHORT).show();}}}
+        if (newUri == null){ Toast.makeText(this, getString(R.string.editor_insert_item_failed),Toast.LENGTH_SHORT).show();}}
+        else {int rowsAffected = getContentResolver().update(mCurrentItemUri, values, null, null);
+        if (rowsAffected == 0) {Toast.makeText(this, getString(R.string.editor_update_item_failed),Toast.LENGTH_SHORT).show();}
+        else {Toast.makeText(this, getString(R.string.editor_update_item_successful), Toast.LENGTH_SHORT).show(); }}}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -227,7 +243,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE,
                 ItemContract.ItemEntry.COLUMN_ITEM_CATEGORY,
                 ItemContract.ItemEntry.COLUMN_ITEM_PRICE,
-                ItemContract.ItemEntry.COLUMN_ITEM_UNITS};
+                ItemContract.ItemEntry.COLUMN_ITEM_UNITS,
+                ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER,
+                ItemContract.ItemEntry.COLUMN_ITEM_EMAIL};
 
 
         return new android.content.CursorLoader(this,
@@ -248,17 +266,23 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     int categoryColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_CATEGORY);
     int priceColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_PRICE);
     int unitsColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_UNITS);
+    int suplierColumnIndex= cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_PRICE);
+    int emailColumnIndex=cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_EMAIL);
 
     String product =cursor.getString(productColumnIndex);
     int reference = cursor.getInt(referenceColumnIndex);
     int category = cursor.getInt(categoryColumnIndex);
     int price = cursor.getInt(priceColumnIndex);
     int units = cursor.getInt(unitsColumnIndex);
+    String suplier=cursor.getString(suplierColumnIndex);
+    String email= cursor.getString(emailColumnIndex);
 
     mNameEditText.setText(product);
     mReferenceText.setText(Integer.toString(reference));
     mPriceText.setText(Integer.toString(price));
     mUnitsText.setText(Integer.toString(units));
+    mSuplierText.setText(suplier);
+    mEmailText.setText(email);
 
     switch (category){
     case ItemContract.ItemEntry.CATEGORY_UNKNOWN:
@@ -299,14 +323,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     mUriPhoto=resultData.getData();
     Log.i(LOG_TAG,"Uri: " + mUriPhoto.toString());
     mTextView.setText(mUriPhoto.toString());
-    mImageView.setImageBitmap(getBitmapFromUri(mUriPhoto));  }}
+    mImageView2.setImageBitmap(getBitmapFromUri(mUriPhoto));  }}
     else if (requestCode == SEND_MAIL_REQUEST && resultCode == Activity.RESULT_OK) {  } }
 
     public Bitmap getBitmapFromUri(Uri uri) {
     if (uri== null || uri.toString().isEmpty())
         return null;
-    int targetW = mImageView.getWidth();
-    int targetH = mImageView.getHeight();
+    int targetW = mImageView2.getWidth();
+    int targetH = mImageView2.getHeight();
 
     InputStream input = null;
 
@@ -348,7 +372,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mReferenceText.setText("");
         mPriceText.setText("");
         mUnitsText.setText("");
-        mCategorySpinner.setSelection(0);}
+        mCategorySpinner.setSelection(0);
+        mSuplierText.setText("");
+        mEmailText.setText("");}
 
     private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener){
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -393,10 +419,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      shareIntent.setData(mUriPhoto);
      shareIntent.setType("message/rfc822");
      shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-     shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+         if (Build.VERSION.SDK_INT < 16) {
+             shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+         } else {
+             shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+         }
      startActivityForResult(Intent.createChooser(shareIntent, "Share with"), SEND_MAIL_REQUEST);}
         else{
-         Snackbar.make(mImageView,"Image not selected", Snackbar.LENGTH_LONG).setAction("Select", new View.OnClickListener() {
+         Snackbar.make(mImageView2,"Image not selected", Snackbar.LENGTH_LONG).setAction("Select", new View.OnClickListener() {
              @Override
              public void onClick(View view) {openImageSelector();}}).show();}}}
 

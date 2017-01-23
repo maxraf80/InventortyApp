@@ -34,7 +34,7 @@ public class ItemProvider extends ContentProvider{
         switch (match) {
 
             case ITEMS:
-                cursor=database.query(ItemContract.ItemEntry.TABLE_NAME,projection, selection, selectionArgs,
+                cursor = database.query(ItemContract.ItemEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
 
@@ -118,12 +118,12 @@ public class ItemProvider extends ContentProvider{
     if (units==0 | units < 0) {throw new IllegalArgumentException("Units needs to be defined");}}
 
     if (values.containsKey((ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER))){
-    Integer suplier = Integer.parseInt(values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER));
-    if (suplier==0 | suplier < 0) {throw new IllegalArgumentException("Suplier needs to be defined");}}
+    String suplier = values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER);
+    if (suplier==null ) {throw new IllegalArgumentException("Suplier needs to be defined");}}
 
     if (values.containsKey((ItemContract.ItemEntry.COLUMN_ITEM_EMAIL))){
-    Integer email = Integer.parseInt(values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_EMAIL));
-    if (email==0 | email < 0) {throw new IllegalArgumentException("Suplier needs to be defined");}}
+    String email = values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_EMAIL);
+    if (email==null ) {throw new IllegalArgumentException("Suplier needs to be defined");}}
 
 
     if (values.size() == 0) {  return 0; }

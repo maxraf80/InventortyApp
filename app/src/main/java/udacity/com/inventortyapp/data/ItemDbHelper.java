@@ -21,8 +21,8 @@ public static final String LOG_TAG =ItemDbHelper.class.getSimpleName();
     + ItemContract.ItemEntry.COLUMN_ITEM_CATEGORY + " INTEGER NOT NULL, "
     + ItemContract.ItemEntry.COLUMN_ITEM_PRICE + " INTEGER NOT NULL DEFAULT 0, "
     + ItemContract.ItemEntry.COLUMN_ITEM_UNITS + " INTEGER NOT NULL DEFAULT 0, "
-    + ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER + "TEXT,"
-    + ItemContract.ItemEntry.COLUMN_ITEM_EMAIL + "TEXT);";
+    + ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER + " TEXT, "
+    + ItemContract.ItemEntry.COLUMN_ITEM_EMAIL + " TEXT );";
 
 
 

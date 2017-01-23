@@ -41,4 +41,6 @@
     <string name="category_Email">Em@il</string>
     <string name="category_suplier">Suplier</string>
     <string name="name">Name</string>
+    <string name="editor_update_item_failed">Error with updating item</string>
+    <string name="editor_update_item_successful">Item updated</string>
 </resources>

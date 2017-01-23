@@ -26,6 +26,9 @@ public class ItemCursorAdapter extends CursorAdapter{
         TextView categoryTextView = (TextView) view.findViewById(R.id.category);
         TextView priceTextView = (TextView) view.findViewById(R.id.price);
         TextView unitsTextView = (TextView) view.findViewById(R.id.units);
+        TextView suplierTextView=(TextView)  view.findViewById(R.id.suplier);
+        TextView emailTextView = (TextView)  view.findViewById(R.id.email);
+
 
 
         int nameColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT);
@@ -33,26 +36,28 @@ public class ItemCursorAdapter extends CursorAdapter{
         int categoryColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_CATEGORY);
         int priceColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_PRICE);
         int unitsColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_UNITS);
+        int suplierColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER);
+        int emailColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_EMAIL);
 
         String name =cursor.getString(nameColumnIndex);
         String reference = cursor.getString(referenceColumnIndex);
         String category =cursor.getString(categoryColumnIndex);
         String price =cursor.getString(priceColumnIndex);
         String units =cursor.getString(unitsColumnIndex);
+        String suplier= cursor.getString(suplierColumnIndex);
+        String email= cursor.getString(emailColumnIndex);
 
         if (TextUtils.isEmpty(reference)){reference = "Unknown";}
         if (TextUtils.isEmpty(category)){category = "Unknown";}
         if (TextUtils.isEmpty(price)){price = "0";}
         if (TextUtils.isEmpty(units)){units = "0";}
+        if (TextUtils.isEmpty(suplier)){suplier = "Unknown";}
+        if (TextUtils.isEmpty(email)){email = "Unknown";}
 
         nameTextView.setText(name);
         referenceTextView.setText(reference);
         categoryTextView.setText(category);
         priceTextView.setText(price);
         unitsTextView.setText(units);
-
-
-
-
-    }
-}
+        suplierTextView.setText(suplier);
+        emailTextView.setText(email);    }}
