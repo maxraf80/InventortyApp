@@ -235,6 +235,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/productImage"
+                android:scaleType="centerCrop"
                 android:src="@drawable/what_you_need_know_managing" />
             <TextView
                 android:id="@+id/image_uri"

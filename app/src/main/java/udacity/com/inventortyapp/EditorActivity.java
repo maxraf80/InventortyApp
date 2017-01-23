@@ -109,9 +109,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         kindSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         mCategorySpinner.setAdapter(kindSpinnerAdapter);
         mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-
-
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int i, long l) {
                 String selection = (String) parent.getItemAtPosition(i);
@@ -144,13 +141,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String suplierString= mSuplierText.getText().toString().trim();
         String emailString= mEmailText.getText().toString().trim();
 
-        if (mCurrentItemUri == null&& TextUtils.isEmpty(nameString) && TextUtils.isEmpty(referenceString)&&
+        if (mCurrentItemUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(referenceString) &&
                 TextUtils.isEmpty(priceString)&& TextUtils.isEmpty(unitString) && TextUtils.isEmpty(suplierString)
-                && TextUtils.isEmpty(emailString)
-        && mCategory== ItemContract.ItemEntry.CATEGORY_UNKNOWN) {return;}
+                && TextUtils.isEmpty(emailString) && mCategory== ItemContract.ItemEntry.CATEGORY_UNKNOWN) {return;}
+
 
         ContentValues values = new ContentValues();
-
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT,nameString);
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE,referenceString);
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_CATEGORY,mCategory);
@@ -159,18 +155,21 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER,suplierString);
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_EMAIL,emailString);
 
-        int price=0;
-        int units=0;
-        if(!TextUtils.isEmpty(priceString)){price=Integer.parseInt(priceString);}
-        if(!TextUtils.isEmpty(unitString)){units=Integer.parseInt(unitString);}
-        values.put(ItemContract.ItemEntry.COLUMN_ITEM_PRICE,price);
-        values.put(ItemContract.ItemEntry.COLUMN_ITEM_UNITS,units);
+    int price=0;
+    if(!TextUtils.isEmpty(priceString)){price=Integer.parseInt(priceString);}
+    values.put(ItemContract.ItemEntry.COLUMN_ITEM_PRICE,price);
 
-        if(mCurrentItemUri == null){Uri newUri = getContentResolver().insert(ItemContract.ItemEntry.CONTENT_URI,values);
-        if (newUri == null){ Toast.makeText(this, getString(R.string.editor_insert_item_failed),Toast.LENGTH_SHORT).show();}}
-        else {int rowsAffected = getContentResolver().update(mCurrentItemUri, values, null, null);
-        if (rowsAffected == 0) {Toast.makeText(this, getString(R.string.editor_update_item_failed),Toast.LENGTH_SHORT).show();}
-        else {Toast.makeText(this, getString(R.string.editor_update_item_successful), Toast.LENGTH_SHORT).show(); }}}
+    int units=0;
+    if(!TextUtils.isEmpty(unitString)){units=Integer.parseInt(unitString);}
+    values.put(ItemContract.ItemEntry.COLUMN_ITEM_UNITS,units);
+
+    if(mCurrentItemUri == null){
+    Uri newUri = getContentResolver().insert(ItemContract.ItemEntry.CONTENT_URI,values);
+    if (newUri == null){ Toast.makeText(this, getString(R.string.editor_insert_item_failed),Toast.LENGTH_SHORT).show();}
+    else{Toast.makeText(this, getString(R.string.editor_insert_item_successful),Toast.LENGTH_SHORT).show();}}
+    else {int rowsAffected = getContentResolver().update(mCurrentItemUri, values, null, null);
+    if (rowsAffected == 0) {Toast.makeText(this, getString(R.string.editor_update_item_failed),Toast.LENGTH_SHORT).show();}
+    else {Toast.makeText(this, getString(R.string.editor_update_item_successful), Toast.LENGTH_SHORT).show(); }}}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -218,9 +217,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     NavUtils.navigateUpFromSameTask(EditorActivity.this);}};
     showUnsavedChangesDialog(discardButtonClickListener);
     return true;}
-    int id = item.getItemId();
-    if (id == R.id.action_sendmail) {sendEmail();return true; }
-    return super.onOptionsItemSelected(item);}
+        int id = item.getItemId();
+        if (id == R.id.action_sendmail) {sendEmail();return true; }
+        return super.onOptionsItemSelected(item);}
 
     @Override
     public void onBackPressed() {

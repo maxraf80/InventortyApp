@@ -47,6 +47,7 @@ public class ItemCursorAdapter extends CursorAdapter{
         String suplier= cursor.getString(suplierColumnIndex);
         String email= cursor.getString(emailColumnIndex);
 
+        if (TextUtils.isEmpty(name)){name = "Unknown";}
         if (TextUtils.isEmpty(reference)){reference = "Unknown";}
         if (TextUtils.isEmpty(category)){category = "Unknown";}
         if (TextUtils.isEmpty(price)){price = "0";}

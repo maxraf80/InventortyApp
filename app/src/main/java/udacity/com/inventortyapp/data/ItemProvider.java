@@ -50,11 +50,11 @@ public class ItemProvider extends ContentProvider{
     @Override
     public Uri insert(Uri uri, ContentValues contentValues) {
     final int match = sUriMatcher.match(uri);
+    switch (match){
 
-
-    switch (match)
-    {case ITEMS:
+    case ITEMS:
     return insertItem(uri,contentValues);
+
     default:
     throw new IllegalArgumentException("Insertion is not supported for " + uri); }}
 
@@ -71,10 +71,10 @@ public class ItemProvider extends ContentProvider{
     if (reference==null){ throw new IllegalArgumentException("Item requires a reference");}
 
     Integer price = Integer.parseInt(values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_PRICE));
-    if (price==0 | price < 0) {throw new IllegalArgumentException("Price needs to be defined"); }
+    if (price != 0 && price<0 ) {throw new IllegalArgumentException("Price needs to be defined"); }
 
     Integer units = Integer.parseInt(values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_UNITS));
-    if ( units==0 | units<0) {throw new IllegalArgumentException("Units needs to be defined"); }
+    if ( units !=0 | units<0) {throw new IllegalArgumentException("Units needs to be defined"); }
 
     String suplier = values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER);
     if (suplier==null){throw new IllegalArgumentException("Suplier cannot be an empty field");}
@@ -110,12 +110,12 @@ public class ItemProvider extends ContentProvider{
 
     if (values.containsKey((ItemContract.ItemEntry.COLUMN_ITEM_PRICE))){
     Integer price = Integer.parseInt(values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_PRICE));
-    if (price==0 | price < 0) {throw new IllegalArgumentException("Price needs to be defined");}}
+    if (price!=null && price < 0) {throw new IllegalArgumentException("Price needs to be defined");}}
 
 
     if (values.containsKey((ItemContract.ItemEntry.COLUMN_ITEM_UNITS))){
     Integer units = Integer.parseInt(values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_UNITS));
-    if (units==0 | units < 0) {throw new IllegalArgumentException("Units needs to be defined");}}
+    if (units!=null && units < 0) {throw new IllegalArgumentException("Units needs to be defined");}}
 
     if (values.containsKey((ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER))){
     String suplier = values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER);
