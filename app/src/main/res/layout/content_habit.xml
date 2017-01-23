@@ -205,20 +205,35 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                style="@style/CategoryStyle"
-                android:text="@string/category_Photo" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="0.5"
+                android:paddingLeft="4dp"
+                android:paddingTop="15dp">
+
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:src="@drawable/shopping_cart"
+                android:scaleType="centerCrop"
+                 />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="0.5"
                 android:orientation="vertical"
                 android:paddingLeft="4dp"
                 android:paddingTop="15dp">
 
                 <ImageButton
-                    android:id="@+id/photo"
+                    android:id="@+id/photo3"
+                    android:layout_gravity="center"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:scaleType="fitCenter"
@@ -232,11 +247,12 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/productImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/productImage"
                 android:scaleType="centerCrop"
                 android:src="@drawable/what_you_need_know_managing" />
+
             <TextView
                 android:id="@+id/image_uri"
                 android:layout_width="wrap_content"

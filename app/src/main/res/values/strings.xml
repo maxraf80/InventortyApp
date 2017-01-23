@@ -25,6 +25,7 @@
     <string name="editor_insert_item_successful">Item saved succesfuly</string>
     <string name="action_save">Save</string>
     <string name="action_delete">Delete all entries</string>
+    <string name="entry_action_delete">Delete this entry</string>
     <string name="editor_delete_item_failed">Delete item failed¡¡¡¡¡</string>
     <string name="editor_delete_item_ok">Delete item was succesful</string>
     <string name="delete_dialog_msg">Delete this Item?</string>
