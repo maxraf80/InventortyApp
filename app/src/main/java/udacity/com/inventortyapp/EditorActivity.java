@@ -1,5 +1,4 @@
 package udacity.com.inventortyapp;
-
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.ContentValues;
@@ -30,7 +29,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,26 +45,21 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private Uri mCurrentItemUri;
     private Uri mUriPhoto;
     private TextView mTextView;
+
     private ImageView mImageView;
     private ImageView mImageView2;
-    private ImageView mSellButton;
     private EditText mNameEditText;
     private EditText mReferenceText;
     private Spinner mCategorySpinner;
     private EditText mPriceText;
     private EditText mUnitsText;
-    private EditText mSuplierText;
+    private EditText mSupplierText;
     private EditText mEmailText;
     private int mCategory = ItemContract.ItemEntry.CATEGORY_UNKNOWN;
     private boolean mItemHasChanged = false;
-
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            mItemHasChanged = true;
-            return false;
-        }
-    };
+   @Override public boolean onTouch(View view, MotionEvent motionEvent) {
+            mItemHasChanged = true;  return false; }};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,45 +81,31 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mReferenceText = (EditText) findViewById(R.id.edit_bar_code);
         mCategorySpinner = (Spinner) findViewById(R.id.spinner_zone);
         mPriceText = (EditText) findViewById(R.id.price);
-        mUnitsText = (EditText) findViewById(R.id.units);
-        mSuplierText = (EditText) findViewById(R.id.suplier);
+        mUnitsText=(EditText)findViewById(R.id.units);
+        mSupplierText = (EditText) findViewById(R.id.suplier);
         mEmailText = (EditText) findViewById(R.id.email);
         mImageView = (ImageView) findViewById(R.id.photo);
         mImageView2 = (ImageView) findViewById(R.id.productImage);
-        mSellButton = (ImageView) findViewById(R.id.photo3);
         mTextView = (TextView) findViewById(R.id.image_uri);
         mImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openImageSelector();
-            }
-        });
 
+        @Override public void onClick(View view) { openImageSelector(); }});
         mNameEditText.setOnTouchListener(mTouchListener);
         mReferenceText.setOnTouchListener(mTouchListener);
         mCategorySpinner.setOnTouchListener(mTouchListener);
         mPriceText.setOnTouchListener(mTouchListener);
         mUnitsText.setOnTouchListener(mTouchListener);
-        mSuplierText.setOnTouchListener(mTouchListener);
+        mSupplierText.setOnTouchListener(mTouchListener);
         mEmailText.setOnTouchListener(mTouchListener);
 
-        mSellButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sellProduct();
-            }
-        });
-
-
-        setupSpinner();
-    }
+        setupSpinner();}
 
     private void setupSpinner() {
-        ArrayAdapter kindSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.array_category_options,
-                android.R.layout.simple_spinner_item);
-        kindSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        mCategorySpinner.setAdapter(kindSpinnerAdapter);
-        mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    ArrayAdapter kindSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.array_category_options,
+    android.R.layout.simple_spinner_item);
+    kindSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+    mCategorySpinner.setAdapter(kindSpinnerAdapter);
+    mCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int i, long l) {
                 String selection = (String) parent.getItemAtPosition(i);
@@ -144,25 +123,18 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     } else if (selection.equals(getString(R.string.category_fruit))) {
                         mCategory = ItemContract.ItemEntry.CATEGORY_FRUIT;
                     } else {
-                        mCategory = ItemContract.ItemEntry.CATEGORY_FISH;
-                    }
-                }
-            }
-
-
+                        mCategory = ItemContract.ItemEntry.CATEGORY_FISH; }}}
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
                 mCategory = ItemContract.ItemEntry.CATEGORY_UNKNOWN;
-            }
-        });
-    }
+            }});}
 
     private void saveItem() {
         String nameString = mNameEditText.getText().toString().trim();
         String referenceString = mReferenceText.getText().toString().trim();
         String priceString = mPriceText.getText().toString().trim();
         String unitString = mUnitsText.getText().toString().trim();
-        String suplierString = mSuplierText.getText().toString().trim();
+        String suplierString = mSupplierText.getText().toString().trim();
         String emailString = mEmailText.getText().toString().trim();
 
         if (mCurrentItemUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(referenceString) &&
@@ -201,6 +173,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 Toast.makeText(this, getString(R.string.editor_insert_item_successful), Toast.LENGTH_SHORT).show();
             }
         } else {
+
+            Log.e(LOG_TAG, "Imprimiendo " + mCurrentItemUri);
             int rowsAffected = getContentResolver().update(mCurrentItemUri, values, null, null);
             if (rowsAffected == 0) {
                 Toast.makeText(this, getString(R.string.editor_update_item_failed), Toast.LENGTH_SHORT).show();
@@ -330,6 +304,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int unitsColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_UNITS);
             int suplierColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_PRICE);
             int emailColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_EMAIL);
+            //int photoColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_PHOTO);
 
             String product = cursor.getString(productColumnIndex);
             int reference = cursor.getInt(referenceColumnIndex);
@@ -343,7 +318,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mReferenceText.setText(Integer.toString(reference));
             mPriceText.setText(Integer.toString(price));
             mUnitsText.setText(Integer.toString(units));
-            mSuplierText.setText(suplier);
+            mSupplierText.setText(suplier);
             mEmailText.setText(email);
 
             switch (category) {
@@ -447,7 +422,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPriceText.setText("");
         mUnitsText.setText("");
         mCategorySpinner.setSelection(0);
-        mSuplierText.setText("");
+        mSupplierText.setText("");
         mEmailText.setText("");
     }
 
@@ -493,18 +468,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 Toast.makeText(this, getString(R.string.editor_delete_item_failed), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, getString(R.string.editor_delete_item_ok), Toast.LENGTH_SHORT).show();
-            }
-        }
-        finish();
-    }
-
-
-    public void sellProduct() {
-        int sollProduct = Integer.parseInt()
-
-
-    }
-
+            }}
+        finish(); }
 
     private void sendEmail() {
         if (mUriPhoto != null) {
@@ -516,6 +481,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     .setSubject(subject)
                     .setText(stream)
                     .getIntent();
+
 
             shareIntent.setData(mUriPhoto);
             shareIntent.setType("message/rfc822");
@@ -533,17 +499,4 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     openImageSelector();
                 }
             }).show();
-        }
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
+        }}}

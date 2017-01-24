@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingLeft="10dp"
     android:paddingTop="15dp">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,7 +25,7 @@
             android:textColor="#2B3D4D" />
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/name_cursor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
@@ -46,7 +51,7 @@
             android:textColor="#2B3D4D" />
 
         <TextView
-            android:id="@+id/reference"
+            android:id="@+id/reference_cursor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -71,7 +76,7 @@
             android:textColor="#2B3D4D" />
 
         <TextView
-            android:id="@+id/category"
+            android:id="@+id/category_cursor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -88,49 +93,71 @@
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:text="@string/product_Price"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:textColor="#2B3D4D" />
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/product_Price"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="#2B3D4D" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/category_Units"
+                android:layout_marginTop="10dp"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="#2B3D4D" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+
 
         <TextView
-            android:id="@+id/price"
+            android:id="@+id/price_cursor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:text="@string/cancel"
             android:fontFamily="sans-serif-medium"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="#AEB6BD" />
 
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:text="@string/category_Units"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:textColor="#2B3D4D" />
-
-        <TextView
-            android:id="@+id/units"
+            android:id="@+id/units_cursor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/product_Units"
             android:fontFamily="sans-serif-medium"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="#AEB6BD" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/track_sale"
+            android:layout_width="131dp"
+            android:layout_marginLeft="50dp"
+            android:layout_height="87dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/people_trading"
+            android:focusable="false"/>
+
     </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -147,7 +174,7 @@
             android:textColor="#2B3D4D" />
 
         <TextView
-            android:id="@+id/suplier"
+            android:id="@+id/suplier_cursor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -172,7 +199,7 @@
             android:textColor="#2B3D4D" />
 
         <TextView
-            android:id="@+id/email"
+            android:id="@+id/email_cursor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -183,5 +210,5 @@
 
 
 
-
+    </LinearLayout>
 </LinearLayout>

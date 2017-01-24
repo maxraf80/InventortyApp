@@ -208,18 +208,18 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_weight="0.5"
+                android:orientation="vertical"
                 android:paddingLeft="4dp"
                 android:paddingTop="15dp">
 
-            <ImageButton
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:src="@drawable/shopping_cart"
-                android:scaleType="centerCrop"
-                 />
+                <ImageButton
+                    android:layout_width="100dp"
+                    android:id="@+id/action_sendmail"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/shopping_cart" />
 
             </LinearLayout>
 
@@ -232,10 +232,10 @@
                 android:paddingTop="15dp">
 
                 <ImageButton
-                    android:id="@+id/photo3"
-                    android:layout_gravity="center"
+                    android:id="@+id/photo"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:layout_gravity="center"
                     android:scaleType="fitCenter"
                     android:src="@drawable/photo_camera" />
             </LinearLayout>
@@ -250,7 +250,7 @@
                 android:id="@+id/productImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
+                android:scaleType="centerInside"
                 android:src="@drawable/what_you_need_know_managing" />
 
             <TextView
