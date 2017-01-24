@@ -65,7 +65,7 @@ public class ItemCursorAdapter extends CursorAdapter {
         String category = cursor.getString(categoryColumnIndex);
         String price = cursor.getString(priceColumnIndex);
         String units = cursor.getString(unitsColumnIndex);
-        String suplier = cursor.getString(suplierColumnIndex);
+        String supplier = cursor.getString(suplierColumnIndex);
         String email = cursor.getString(emailColumnIndex);
 
 
@@ -84,8 +84,8 @@ public class ItemCursorAdapter extends CursorAdapter {
         if (TextUtils.isEmpty(units)) {
             units = "0"; }
 
-        if (TextUtils.isEmpty(suplier)) {
-            suplier = "Unknown";
+        if (TextUtils.isEmpty(supplier)) {
+            supplier = "Unknown";
         }
         if (TextUtils.isEmpty(email)) {
             email = "Unknown";
@@ -96,7 +96,7 @@ public class ItemCursorAdapter extends CursorAdapter {
         categoryTextView.setText(category);
         priceTextView.setText(price);
         unitsTextView.setText(units);
-        suplierTextView.setText(suplier);
+        suplierTextView.setText(supplier);
         emailTextView.setText(email);
 
 
@@ -113,7 +113,7 @@ public class ItemCursorAdapter extends CursorAdapter {
 
         if (units>0){units--;
             ContentValues values = new ContentValues();
-            values.put(ItemContract.ItemEntry.COLUMN_ITEM_UNITS,mQuantitySold);
+            values.put(ItemContract.ItemEntry.COLUMN_ITEM_UNITS,units);
             Uri currentProductUri = ContentUris.withAppendedId(ItemContract.ItemEntry.CONTENT_URI, mRowId);
             mRowsAffected= mContext.getContentResolver().update(currentProductUri,values,null,null);}
         return mRowsAffected;}}
