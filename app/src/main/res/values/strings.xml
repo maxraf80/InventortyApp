@@ -44,4 +44,7 @@
     <string name="name">Name</string>
     <string name="editor_update_item_failed">Error with updating item</string>
     <string name="editor_update_item_successful">Item updated</string>
+    <string name="email_message_greetings">\\n\\nThank You for Your Help!</string>
+    <string name="email_message_units">\\nProduct Quantity:</string>
+    <string name="email_message_name">Product reference :</string>
 </resources>

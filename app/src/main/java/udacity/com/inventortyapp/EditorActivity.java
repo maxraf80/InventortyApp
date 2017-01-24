@@ -11,9 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
-import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -29,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -234,13 +233,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     return true;
                 }
                 DialogInterface.OnClickListener discardButtonClickListener =
-                        new DialogInterface.OnClickListener() {
+                new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 NavUtils.navigateUpFromSameTask(EditorActivity.this);
                             }
                         };
                 showUnsavedChangesDialog(discardButtonClickListener);
+
                 return true;
         }
         int id = item.getItemId();
@@ -250,6 +250,41 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void sendEmail() {
+        String[] projection = {
+                ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE,
+                ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT,
+                ItemContract.ItemEntry.COLUMN_ITEM_UNITS,
+                ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER,
+                ItemContract.ItemEntry.COLUMN_ITEM_EMAIL};
+
+    Cursor cursor = getContentResolver().query(mCurrentItemUri,projection,null,null,null);
+    if (cursor.moveToFirst()){
+    String productName = cursor.getString(cursor.getColumnIndexOrThrow(ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT));
+    String productReference=cursor.getString(cursor.getColumnIndexOrThrow(ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE));
+    String emailAddress = cursor.getString(cursor.getColumnIndexOrThrow(ItemContract.ItemEntry.COLUMN_ITEM_EMAIL));
+    String subject = (R.string.orderSubject + cursor.getString(cursor.getColumnIndexOrThrow(ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE)));
+
+        writeEmail(emailAddress, subject,  productReference +
+                        getString(R.string.email_message_name) + " " + productName +
+                        getString(R.string.email_message_units) + " " +
+                        getString(R.string.email_message_greetings));
+    }}
+
+
+
+    public void writeEmail(String address, String subject, String message) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_EMAIL, address);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, message);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -471,32 +506,4 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             }}
         finish(); }
 
-    private void sendEmail() {
-        if (mUriPhoto != null) {
-            String subject = getString(R.string.orderSubject);
-            String stream = getString(R.string.genericMessageBeggining) + mNameEditText + getString(R.string.genericMessageEnd) +
-                    mUnitsText;
-            Intent shareIntent = ShareCompat.IntentBuilder.from(this)
-                    .setStream(mCurrentItemUri)
-                    .setSubject(subject)
-                    .setText(stream)
-                    .getIntent();
-
-
-            shareIntent.setData(mUriPhoto);
-            shareIntent.setType("message/rfc822");
-            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            if (Build.VERSION.SDK_INT < 16) {
-                shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-            } else {
-                shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-            }
-            startActivityForResult(Intent.createChooser(shareIntent, "Share with"), SEND_MAIL_REQUEST);
-        } else {
-            Snackbar.make(mImageView2, "Image not selected", Snackbar.LENGTH_LONG).setAction("Select", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    openImageSelector();
-                }
-            }).show();
-        }}}
+    }
