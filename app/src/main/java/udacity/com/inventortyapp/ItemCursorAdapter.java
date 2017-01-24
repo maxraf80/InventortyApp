@@ -25,7 +25,7 @@ public class ItemCursorAdapter extends CursorAdapter {
     private int mRowsAffected;
     private String mQuantitySold;
     private Context mContext;
-    private  TextView unitsTextView;
+
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
@@ -40,7 +40,7 @@ public class ItemCursorAdapter extends CursorAdapter {
         TextView referenceTextView = (TextView) view.findViewById(R.id.reference_cursor);
         TextView categoryTextView = (TextView) view.findViewById(R.id.category_cursor);
         TextView priceTextView = (TextView) view.findViewById(R.id.price_cursor);
-        unitsTextView = (TextView) view.findViewById(R.id.units_cursor);
+    final TextView unitsTextView = (TextView) view.findViewById(R.id.units_cursor);
         TextView suplierTextView = (TextView) view.findViewById(R.id.suplier_cursor);
         TextView emailTextView = (TextView) view.findViewById(R.id.email_cursor);
         Button mSellButton = (Button) view.findViewById(R.id.track_sale);
@@ -103,16 +103,15 @@ public class ItemCursorAdapter extends CursorAdapter {
 
         mSellButton.setOnClickListener(new View.OnClickListener() {
         @Override
-        public void onClick(View view) {final int rowsAffected = productSale(mRowId);
-        if (rowsAffected != 0) {unitsTextView.setText(mQuantitySold);}}});}
+        public void onClick(View view) {
+        productSale(mRowId,Integer.parseInt(unitsTextView.getText().toString()));
+        }});}
 
 
+    public  int  productSale(int mRowId, int units){
 
-    public  int  productSale(int mRowId){
 
-      int units = Integer.parseInt(unitsTextView.getText().toString());
         if (units>0){units--;
-            mQuantitySold=Integer.toString(units);
             ContentValues values = new ContentValues();
             values.put(ItemContract.ItemEntry.COLUMN_ITEM_UNITS,mQuantitySold);
             Uri currentProductUri = ContentUris.withAppendedId(ItemContract.ItemEntry.CONTENT_URI, mRowId);
