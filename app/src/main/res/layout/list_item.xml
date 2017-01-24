@@ -118,6 +118,7 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
+            android:layout_marginRight="30dp"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
             android:orientation="vertical">
@@ -146,13 +147,12 @@
 
         </LinearLayout>
 
-        <ImageButton
+        <Button
             android:id="@+id/track_sale"
-            android:layout_width="131dp"
+            android:layout_width="86dp"
             android:layout_marginLeft="50dp"
             android:layout_height="87dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/people_trading"
+            android:background="@drawable/people_trading"
             android:focusable="false"/>
 
     </LinearLayout>

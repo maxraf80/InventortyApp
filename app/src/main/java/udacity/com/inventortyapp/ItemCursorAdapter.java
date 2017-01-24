@@ -9,8 +9,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import udacity.com.inventortyapp.data.ItemContract;
@@ -21,7 +21,7 @@ public class ItemCursorAdapter extends CursorAdapter {
         super(context, c, 0);
     }
 
-    private int mRowId;
+
     private int mRowsAffected;
     private String mQuantitySold;
     private Context mContext;
@@ -34,7 +34,7 @@ public class ItemCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-
+        final int mRowId = cursor.getInt(cursor.getColumnIndexOrThrow(ItemContract.ItemEntry._ID));
 
         TextView nameTextView = (TextView) view.findViewById(R.id.name_cursor);
         TextView referenceTextView = (TextView) view.findViewById(R.id.reference_cursor);
@@ -43,7 +43,7 @@ public class ItemCursorAdapter extends CursorAdapter {
         unitsTextView = (TextView) view.findViewById(R.id.units_cursor);
         TextView suplierTextView = (TextView) view.findViewById(R.id.suplier_cursor);
         TextView emailTextView = (TextView) view.findViewById(R.id.email_cursor);
-        ImageView mSellButton = (ImageView) view.findViewById(R.id.track_sale);
+        Button mSellButton = (Button) view.findViewById(R.id.track_sale);
 
 
 
@@ -56,7 +56,7 @@ public class ItemCursorAdapter extends CursorAdapter {
         int suplierColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER);
         int emailColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_EMAIL);
 
-        mRowId=cursor.getInt(cursor.getColumnIndexOrThrow(ItemContract.ItemEntry._ID));
+
         mContext = context;
 
 
@@ -67,7 +67,7 @@ public class ItemCursorAdapter extends CursorAdapter {
         String units = cursor.getString(unitsColumnIndex);
         String suplier = cursor.getString(suplierColumnIndex);
         String email = cursor.getString(emailColumnIndex);
-        //String quantity = cursor.getString(unitsColumnIndex);
+
 
         if (TextUtils.isEmpty(name)) {
             name = "Unknown";
@@ -82,8 +82,8 @@ public class ItemCursorAdapter extends CursorAdapter {
             price = "0";
         }
         if (TextUtils.isEmpty(units)) {
-            units = "0";
-        }
+            units = "0"; }
+
         if (TextUtils.isEmpty(suplier)) {
             suplier = "Unknown";
         }
@@ -98,23 +98,23 @@ public class ItemCursorAdapter extends CursorAdapter {
         unitsTextView.setText(units);
         suplierTextView.setText(suplier);
         emailTextView.setText(email);
-//        mUnitsText.setText(quantity);
+
 
 
         mSellButton.setOnClickListener(new View.OnClickListener() {
         @Override
-        public void onClick(View view) {int rowsAffected = productSale();
+        public void onClick(View view) {final int rowsAffected = productSale(mRowId);
         if (rowsAffected != 0) {unitsTextView.setText(mQuantitySold);}}});}
 
 
 
-    public int  productSale(){
+    public  int  productSale(int mRowId){
 
-        int units = Integer.parseInt(unitsTextView.getText().toString());
+      int units = Integer.parseInt(unitsTextView.getText().toString());
         if (units>0){units--;
             mQuantitySold=Integer.toString(units);
             ContentValues values = new ContentValues();
             values.put(ItemContract.ItemEntry.COLUMN_ITEM_UNITS,mQuantitySold);
-            Uri currentProductUri = ContentUris.withAppendedId(ItemContract.ItemEntry.CONTENT_URI,mRowId);
+            Uri currentProductUri = ContentUris.withAppendedId(ItemContract.ItemEntry.CONTENT_URI, mRowId);
             mRowsAffected= mContext.getContentResolver().update(currentProductUri,values,null,null);}
         return mRowsAffected;}}
