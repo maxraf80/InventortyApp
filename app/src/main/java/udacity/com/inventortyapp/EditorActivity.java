@@ -85,6 +85,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSupplierText = (EditText) findViewById(R.id.suplier);
         mEmailText = (EditText) findViewById(R.id.email);
 
+
         mNameEditText.setOnTouchListener(mTouchListener);
         mReferenceText.setOnTouchListener(mTouchListener);
         mCategorySpinner.setOnTouchListener(mTouchListener);
@@ -147,6 +148,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String unitString = mUnitsText.getText().toString().trim();
         String suplierString = mSupplierText.getText().toString().trim();
         String emailString = mEmailText.getText().toString().trim();
+        String photoString= mImageView2.toString();
+
 
         if (mCurrentItemUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(referenceString) &&
                 TextUtils.isEmpty(priceString) && TextUtils.isEmpty(unitString) && TextUtils.isEmpty(suplierString)
@@ -162,6 +165,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_PRICE, priceString);
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_UNITS, unitString);
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER, suplierString);
+        values.put(ItemContract.ItemEntry.COLUMN_ITEM_PHOTO, photoString );
         values.put(ItemContract.ItemEntry.COLUMN_ITEM_EMAIL, emailString);
 
         int price = 0;
@@ -326,6 +330,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 ItemContract.ItemEntry.COLUMN_ITEM_PRICE,
                 ItemContract.ItemEntry.COLUMN_ITEM_UNITS,
                 ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER,
+                ItemContract.ItemEntry.COLUMN_ITEM_PHOTO,
                 ItemContract.ItemEntry.COLUMN_ITEM_EMAIL};
 
 
@@ -359,6 +364,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int price = cursor.getInt(priceColumnIndex);
             int units = cursor.getInt(unitsColumnIndex);
             String suplier = cursor.getString(suplierColumnIndex);
+            String photo = cursor.getString(photoColumnIndex);
             String email = cursor.getString(emailColumnIndex);
 
             mNameEditText.setText(product);
@@ -367,6 +373,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mUnitsText.setText(Integer.toString(units));
             mSupplierText.setText(suplier);
             mEmailText.setText(email);
+
 
             switch (category) {
                 case ItemContract.ItemEntry.CATEGORY_UNKNOWN:
