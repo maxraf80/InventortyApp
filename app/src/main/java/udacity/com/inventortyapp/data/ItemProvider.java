@@ -96,6 +96,11 @@ public class ItemProvider extends ContentProvider {
             throw new IllegalArgumentException("Suplier cannot be an empty field");
         }
 
+        String photo = values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_PHOTO);
+        if (photo == null) {
+            throw new IllegalArgumentException("Product must to have a proper photo");
+        }
+
         String email = values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_SUPLIER);
         if (email == null) {
             throw new IllegalArgumentException("Suplier cannot be an empty field");
@@ -164,6 +169,12 @@ public class ItemProvider extends ContentProvider {
                 throw new IllegalArgumentException("Suplier needs to be defined");
             }
         }
+
+        if (values.containsKey((ItemContract.ItemEntry.COLUMN_ITEM_PHOTO))) {
+            String photo = values.getAsString(ItemContract.ItemEntry.COLUMN_ITEM_EMAIL);
+            if (photo == null) {
+                throw new IllegalArgumentException("Suplier needs to be defined");}}
+
 
 
         if (values.size() == 0) {

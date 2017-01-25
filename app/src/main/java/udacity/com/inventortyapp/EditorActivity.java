@@ -289,9 +289,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
 
     public void writeEmail(String emailAddress, String subject, String message) {
-        Intent intent = new Intent(Intent.ACTION_SEND);
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setType("text/html");
         intent.putExtra(Intent.EXTRA_EMAIL, new String [] {emailAddress});
+        intent.setData(Uri.parse("mailto:"));
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
         intent.putExtra(Intent.EXTRA_TEXT, message);
         if (intent.resolveActivity(getPackageManager()) != null) { startActivity(Intent.createChooser(intent, "Send Email")); } }
@@ -350,7 +351,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int unitsColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_UNITS);
             int suplierColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_PRICE);
             int emailColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_EMAIL);
-            //int photoColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_PHOTO);
+            int photoColumnIndex = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_ITEM_PHOTO);
 
             String product = cursor.getString(productColumnIndex);
             int reference = cursor.getInt(referenceColumnIndex);
