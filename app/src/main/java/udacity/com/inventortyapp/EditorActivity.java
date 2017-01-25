@@ -27,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,6 +46,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     private ImageView mImageView;
     private ImageView mImageView2;
+    private ImageView mOrderView;
     private EditText mNameEditText;
     private EditText mReferenceText;
     private Spinner mCategorySpinner;
@@ -56,6 +56,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mEmailText;
     private int mCategory = ItemContract.ItemEntry.CATEGORY_UNKNOWN;
     private boolean mItemHasChanged = false;
+
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
    @Override public boolean onTouch(View view, MotionEvent motionEvent) {
             mItemHasChanged = true;  return false; }};
@@ -83,12 +84,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mUnitsText=(EditText)findViewById(R.id.units);
         mSupplierText = (EditText) findViewById(R.id.suplier);
         mEmailText = (EditText) findViewById(R.id.email);
-        mImageView = (ImageView) findViewById(R.id.photo);
-        mImageView2 = (ImageView) findViewById(R.id.productImage);
-        mTextView = (TextView) findViewById(R.id.image_uri);
-        mImageView.setOnClickListener(new View.OnClickListener() {
 
-        @Override public void onClick(View view) { openImageSelector(); }});
         mNameEditText.setOnTouchListener(mTouchListener);
         mReferenceText.setOnTouchListener(mTouchListener);
         mCategorySpinner.setOnTouchListener(mTouchListener);
@@ -96,6 +92,22 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mUnitsText.setOnTouchListener(mTouchListener);
         mSupplierText.setOnTouchListener(mTouchListener);
         mEmailText.setOnTouchListener(mTouchListener);
+
+
+
+
+        mImageView = (ImageView) findViewById(R.id.photo); // Cámara de fotos
+        mImageView2 = (ImageView) findViewById(R.id.productImage); // Prefoto seleccionada por la cámara
+        mTextView = (TextView) findViewById(R.id.image_uri);  // Ruta de acceso
+
+        mImageView.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) { openImageSelector(); }});
+
+
+        mOrderView = (ImageView) findViewById(R.id.action_sendmail);
+        mOrderView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {sendEmail(); }});
 
         setupSpinner();}
 
@@ -252,6 +264,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void sendEmail() {
+
         String[] projection = {
                 ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE,
                 ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT,
@@ -261,29 +274,27 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     Cursor cursor = getContentResolver().query(mCurrentItemUri,projection,null,null,null);
     if (cursor.moveToFirst()){
+
     String productName = cursor.getString(cursor.getColumnIndexOrThrow(ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT));
     String productReference=cursor.getString(cursor.getColumnIndexOrThrow(ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE));
     String emailAddress = cursor.getString(cursor.getColumnIndexOrThrow(ItemContract.ItemEntry.COLUMN_ITEM_EMAIL));
-    String subject = (R.string.orderSubject + cursor.getString(cursor.getColumnIndexOrThrow(ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE)));
+    String productSubject= cursor.getString(cursor.getColumnIndexOrThrow(ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE));
+    String subject = (getString(R.string.orderSubject)+ productSubject);
+    String body= (getString(R.string.genericMessageBeggining)+ " " + productName + "\n" + "\n" + (getString(R.string.genericMessageMiddle)));
 
-        writeEmail(emailAddress, subject,  productReference +
-                        getString(R.string.email_message_name) + " " + productName +
-                        getString(R.string.email_message_units) + " " +
-                        getString(R.string.email_message_greetings));
+        writeEmail(emailAddress, subject, body);
+        Log.e(LOG_TAG, "Item Sold button was pressed" + emailAddress);
     }}
 
 
 
-    public void writeEmail(String address, String subject, String message) {
+    public void writeEmail(String emailAddress, String subject, String message) {
         Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("*/*");
-        intent.putExtra(Intent.EXTRA_EMAIL, address);
+        intent.setType("text/html");
+        intent.putExtra(Intent.EXTRA_EMAIL, new String [] {emailAddress});
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
         intent.putExtra(Intent.EXTRA_TEXT, message);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }
-    }
+        if (intent.resolveActivity(getPackageManager()) != null) { startActivity(Intent.createChooser(intent, "Send Email")); } }
 
 
     @Override

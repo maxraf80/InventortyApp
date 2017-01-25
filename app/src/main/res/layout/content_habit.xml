@@ -216,6 +216,7 @@
                 <ImageButton
                     android:layout_width="100dp"
                     android:id="@+id/action_sendmail"
+                    android:background="@drawable/shopping_cart"
                     android:layout_height="100dp"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
@@ -256,7 +257,8 @@
             <TextView
                 android:id="@+id/image_uri"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/category_Photo"/>
 
         </LinearLayout>
     </LinearLayout>
