@@ -276,11 +276,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     if (cursor.moveToFirst()){
 
     String productName = cursor.getString(cursor.getColumnIndexOrThrow(ItemContract.ItemEntry.COLUMN_ITEM_PRODUCT));
-    String productReference=cursor.getString(cursor.getColumnIndexOrThrow(ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE));
+    String productReference=((getString(R.string.email_message_name)) +" "+  cursor.getString(cursor.getColumnIndexOrThrow(ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE)));
     String emailAddress = cursor.getString(cursor.getColumnIndexOrThrow(ItemContract.ItemEntry.COLUMN_ITEM_EMAIL));
     String productSubject= cursor.getString(cursor.getColumnIndexOrThrow(ItemContract.ItemEntry.COLUMN_ITEM_REFERENCE));
-    String subject = (getString(R.string.orderSubject)+ productSubject);
-    String body= (getString(R.string.genericMessageBeggining)+ " " + productName + "\n" + "\n" + (getString(R.string.genericMessageMiddle)));
+    String subject = (getString(R.string.orderSubject)+ " " + productSubject);
+    String body= (getString(R.string.genericMessageBeggining)+ " " + productName +"  " +productReference + "\n" + "\n" + (getString(R.string.genericMessageMiddle)) + "\n"+ "\n" +(getString(R.string.genericMessageEnd)));
 
         writeEmail(emailAddress, subject, body);
         Log.e(LOG_TAG, "Item Sold button was pressed" + emailAddress);
