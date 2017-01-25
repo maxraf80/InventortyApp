@@ -375,6 +375,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mEmailText.setText(email);
 
 
+
             switch (category) {
                 case ItemContract.ItemEntry.CATEGORY_UNKNOWN:
                     mCategorySpinner.setSelection(1);
